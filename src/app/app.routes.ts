@@ -3,7 +3,11 @@ import { UserProfileComponent } from './modules/security/components/user-profile
 import { UserSessionsComponent } from './modules/security/components/user-sessions/user-sessions.component';
 
 export const routes: Routes = [
+  { 
+    path: '',
+    redirectTo: '/profile', // O la ruta que quieras como inicio
+    pathMatch: 'full'
+  },
   { path: 'profile', component: UserProfileComponent },
-  { path: 'sessions', component: UserSessionsComponent },
-  // Agrega más rutas según necesites
+  // Otras rutas...
 ];
