@@ -1,0 +1,22 @@
+<div class="sessions-container">
+  <h3>Sesiones Activas</h3>
+  
+  <div *ngIf="sessions.length === 0" class="no-sessions">
+    No hay sesiones activas
+  </div>
+
+  <ul class="session-list" *ngIf="sessions.length > 0">
+    <li *ngFor="let session of sessions" class="session-item">
+      <div class="session-info">
+        <span class="token">Token: {{ session.token | slice:0:20 }}...</span>
+        <span class="expiration">Expira: {{ session.expiration | date:'medium' }}</span>
+        <span class="state" [class.active]="session.state === 'active'">
+          Estado: {{ session.state }}
+        </span>
+      </div>
+      <button (click)="revokeSession(session.id)" class="btn btn-danger">
+        Revocar
+      </button>
+    </li>
+  </ul>
+</div>

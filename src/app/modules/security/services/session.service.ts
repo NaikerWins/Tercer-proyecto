@@ -7,9 +7,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private apiUrl = environment.api + '/sessions';
+
   constructor(private http: HttpClient) {}
 
   getByUser(userId: number): Observable<Session[]> {
     return this.http.get<Session[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  revoke(sessionId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${sessionId}`);
   }
 }

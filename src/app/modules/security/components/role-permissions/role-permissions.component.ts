@@ -1,30 +1,28 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppPermission } from 'src/app/core/models/permission.model';
-import { PermissionService } from 'src/app/modules/security/services/permission.service';
-import { RoleService } from 'src/app/modules/security/services/role.service';
-import { RolePermissionService } from 'src/app/modules/security/services/role-permission.service';
+import { Role } from 'src/app/core/models/role.model';
+import { RolePermission } from 'src/app/core/models/role-permission.model';
 
+import { RoleService } from '../../services/role.service';
+import { PermissionService } from '../../services/permission.service';
+import { RolePermissionService } from '../../services/role-permission.service';
+
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-role-permissions',
-  template: `
-    <h3>Asignar Permisos a Rol</h3>
-    <select [(ngModel)]="selectedRoleId">
-      <option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</option>
-    </select>
-    <div *ngFor="let p of permissions">
-      <label>
-        <input type="checkbox" (change)="togglePermission(p.id)" />
-        {{ p.method }} {{ p.url }}
-      </label>
-    </div>
-  `
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  providers: [RoleService, PermissionService, RolePermissionService],
+  templateUrl: './role-permissions.component.html',
+  styleUrls: ['./role-permissions.component.css']
 })
-
 export class RolePermissionsComponent implements OnInit {
-  roles: any[] = [];
+  roles: Role[] = [];
   permissions: AppPermission[] = [];
-  selectedRoleId!: number;
+  selectedRoleId: number | null = null;
+  rolePermissions: Set<number> = new Set();
 
   constructor(
     private roleService: RoleService,
@@ -33,13 +31,54 @@ export class RolePermissionsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.roleService.getAll().subscribe(data => this.roles = data);
-    this.permissionService.getAll().subscribe(data => this.permissions = data);
+    this.loadRoles();
+    this.loadPermissions();
+  }
+
+  loadRoles() {
+    this.roleService.getAll().subscribe({
+      next: (data) => {
+        this.roles = data;
+        if (this.roles.length > 0) {
+          this.selectedRoleId = this.roles[0].id;
+          this.loadRolePermissions(this.selectedRoleId);
+        }
+      },
+      error: (err) => console.error('Error al obtener roles', err)
+    });
+  }
+
+  loadPermissions() {
+    this.permissionService.getAll().subscribe({
+      next: (data) => {
+        this.permissions = data;
+      },
+      error: (err) => console.error('Error al obtener permisos', err)
+    });
+  }
+
+  loadRolePermissions(roleId: number) {
+  }
+
+  onRoleChange() {
+    if (this.selectedRoleId) {
+      this.loadRolePermissions(this.selectedRoleId);
+    }
   }
 
   togglePermission(permissionId: number) {
-    if (this.selectedRoleId) {
-      this.rolePermissionService.assign(this.selectedRoleId, permissionId).subscribe();
+    if (!this.selectedRoleId) return;
+
+    if (this.rolePermissions.has(permissionId)) {
+      this.rolePermissionService.revoke(this.selectedRoleId, permissionId).subscribe({
+        next: () => this.rolePermissions.delete(permissionId),
+        error: (err) => console.error('Error al revocar permiso', err)
+      });
+    } else {
+      this.rolePermissionService.assign(this.selectedRoleId, permissionId).subscribe({
+        next: () => this.rolePermissions.add(permissionId),
+        error: (err) => console.error('Error al asignar permiso', err)
+      });
     }
   }
 }

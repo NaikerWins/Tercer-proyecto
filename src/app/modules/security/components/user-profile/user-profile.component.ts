@@ -1,9 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ProfileService } from 'src/app/modules/security/services/profile.service';
+import { ProfileService } from '../../services/profile.service';
 import { Profile } from 'src/app/core/models/profile.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
+  standalone: true, // <-- Esto es crucial
+  imports: [CommonModule, FormsModule], // <-- Importa lo que necesites
   template: `
     <h3>Perfil</h3>
     <form (ngSubmit)="update()">

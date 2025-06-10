@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class RoleService {
   private apiUrl = environment.api + '/roles';
-  
+
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<any[]> {

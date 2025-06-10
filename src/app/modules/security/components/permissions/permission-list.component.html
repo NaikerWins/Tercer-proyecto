@@ -1,0 +1,63 @@
+<div class="permissions-container">
+  <h3>Administrar Permisos</h3>
+
+  <div class="create-form">
+    <h4>Crear Nuevo Permiso</h4>
+    <form (ngSubmit)="createPermission()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="method">Método:</label>
+          <select id="method" [(ngModel)]="newPermission.method" name="method" required>
+            <option value="">Seleccionar...</option>
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="url">URL:</label>
+          <input 
+            type="text" 
+            id="url" 
+            [(ngModel)]="newPermission.url" 
+            name="url" 
+            required
+            placeholder="Ej: /api/users"
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Crear Permiso</button>
+    </form>
+  </div>
+
+  <div class="permissions-list">
+    <h4>Lista de Permisos</h4>
+    <table *ngIf="permissions.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Método</th>
+          <th>URL</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let perm of permissions">
+          <td>{{ perm.id }}</td>
+          <td>{{ perm.method }}</td>
+          <td>{{ perm.url }}</td>
+          <td>
+            <button (click)="deletePermission(perm.id)" class="btn btn-danger">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="permissions.length === 0">No hay permisos registrados</p>
+  </div>
+</div>

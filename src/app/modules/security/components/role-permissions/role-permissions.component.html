@@ -1,0 +1,37 @@
+<div class="role-perms-container">
+  <h3>Asignación de Permisos a Roles</h3>
+
+  <div class="role-selector">
+    <label for="role">Seleccionar Rol:</label>
+    <select 
+      id="role" 
+      [(ngModel)]="selectedRoleId" 
+      name="role" 
+      (change)="onRoleChange()"
+    >
+      <option *ngFor="let role of roles" [value]="role.id">
+        {{ role.name }}
+      </option>
+
+    </select>
+  </div>
+
+  <div class="permissions-grid" *ngIf="selectedRoleId">
+    <h4>Permisos Disponibles</h4>
+    <div class="perms-list">
+      <div *ngFor="let perm of permissions" class="perm-item">
+        <label>
+          <input 
+            type="checkbox" 
+            [checked]="rolePermissions.has(perm.id)"
+            (change)="togglePermission(perm.id)"
+          >
+          <span class="method" [class]="'method-' + perm.method.toLowerCase()">
+            {{ perm.method }}
+          </span>
+          <span class="url">{{ perm.url }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

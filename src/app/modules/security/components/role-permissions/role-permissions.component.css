@@ -1,0 +1,81 @@
+.role-perms-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.role-selector {
+  margin-bottom: 30px;
+}
+
+.role-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.role-selector select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.permissions-grid {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.perms-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.perm-item {
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.perm-item label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.method {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
+.method-get {
+  background-color: #28a745;
+}
+
+.method-post {
+  background-color: #007bff;
+}
+
+.method-put {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.method-delete {
+  background-color: #dc3545;
+}
+
+.url {
+  flex-grow: 1;
+}

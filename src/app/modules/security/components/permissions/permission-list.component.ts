@@ -1,37 +1,52 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppPermission } from 'src/app/core/models/permission.model';
-import { PermissionService } from 'src/app/modules/security/services/permission.service';
+import { PermissionService } from '../../services/permission.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-permission-list',
-  template: `
-    <h3>Permisos</h3>
-    <ul>
-      <li *ngFor="let p of permissions">
-        {{ p.method }} {{ p.url }}
-      </li>
-    </ul>
-
-    <form (ngSubmit)="addPermission()">
-      <input [(ngModel)]="newPermission.method" name="method" placeholder="Método" required />
-      <input [(ngModel)]="newPermission.url" name="url" placeholder="URL" required />
-      <button type="submit">Crear</button>
-    </form>
-  `
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './permission-list.component.html',
+  styleUrls: ['./permission-list.component.css']
 })
 export class PermissionListComponent implements OnInit {
   permissions: AppPermission[] = [];
-  newPermission: AppPermission = { id: 0, url: '', method: '' };
+  newPermission: Omit<AppPermission, 'id'> = { url: '', method: '' };
 
   constructor(private permissionService: PermissionService) {}
 
   ngOnInit() {
-    this.permissionService.getAll().subscribe(data => this.permissions = data);
+    this.loadPermissions();
   }
 
-  addPermission() {
-    this.permissionService.create(this.newPermission).subscribe(() => {
-      this.newPermission = { id: 0, url: '', method: '' };
-      this.ngOnInit();
+  loadPermissions() {
+    this.permissionService.getAll().subscribe(data => {
+      this.permissions = data;
     });
+  }
+
+  createPermission() {
+    this.permissionService.create(this.newPermission).subscribe({
+      next: () => {
+        this.loadPermissions();
+        this.newPermission = { url: '', method: '' };
+        alert('Permiso creado correctamente');
+      },
+      error: (err) => console.error('Error al crear permiso', err)
+    });
+  }
+
+  deletePermission(id: number) {
+    if (confirm('¿Estás seguro de eliminar este permiso?')) {
+      this.permissionService.delete(id).subscribe({
+        next: () => {
+          this.loadPermissions();
+          alert('Permiso eliminado correctamente');
+        },
+        error: (err) => console.error('Error al eliminar permiso', err)
+      });
+    }
   }
 }

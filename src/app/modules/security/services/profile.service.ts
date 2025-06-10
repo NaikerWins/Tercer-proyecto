@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { Profile } from 'src/app/core/models/profile.model';
 import { environment } from 'src/environments/environment';
 
-
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private apiUrl = environment.api + '/profiles';
+
   constructor(private http: HttpClient) {}
 
   get(userId: number): Observable<Profile> {
