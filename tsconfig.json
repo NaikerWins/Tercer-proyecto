@@ -3,6 +3,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
+      "paths": {
+        "src/environments/environment": ["src/environments/environment.ts"],
+        "src/app/core/models/session.model": ["src/app/core/models/session.model.ts"],
+      },
+
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
